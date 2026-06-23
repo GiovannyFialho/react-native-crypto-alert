@@ -58,6 +58,7 @@ describe("EmptyState", () => {
       />,
     );
 
-    const actionElement = screen.getByTestId("EmptyStateAction");
+    const actionElement = screen.queryByTestId("EmptyStateAction");
+    expect(actionElement).toBeNull();
   });
 });
