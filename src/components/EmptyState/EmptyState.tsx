@@ -22,11 +22,7 @@ export function EmptyState({
     <View style={emptyStateStyles.wrap}>
       <View style={emptyStateStyles.iconCircle}>{icon}</View>
 
-      <Text
-        style={emptyStateStyles.title}
-        nativeID={titleId}
-        accessibilityRole="header"
-      >
+      <Text style={emptyStateStyles.title} nativeID={titleId}>
         {title}
       </Text>
 

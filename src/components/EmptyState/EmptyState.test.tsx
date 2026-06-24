@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react-native";
+import { render } from "@testing-library/react-native";
 import React from "react";
 import { Text } from "react-native";
 
@@ -42,23 +42,24 @@ describe("EmptyState", () => {
     expect(getByText("Criar alerta")).toBeTruthy();
   });
 
-  it("should not render the action when not provided", () => {
+  it("should not render the action when not provided", async () => {
     const title = "Nenhum alert encontrado";
     const description =
       "Crie seu primeiro alerta para ser notificado quando uma criptomoeda atingir seu preço alvo.";
     const icon = "🚀";
-    const action = <Text>Criar alerta</Text>;
 
-    render(
+    const { queryByTestId } = await render(
       <EmptyState
         icon={<Text>{icon}</Text>}
         title={title}
         description={description}
-        action={action}
       />,
     );
 
-    const actionElement = screen.queryByTestId("EmptyStateAction");
+    const actionElement = queryByTestId("EmptyStateAction");
+
+    console.log(actionElement);
+
     expect(actionElement).toBeNull();
   });
 });
