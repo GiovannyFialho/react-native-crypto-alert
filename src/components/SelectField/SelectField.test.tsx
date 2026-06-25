@@ -72,4 +72,30 @@ describe("Component: SelectField", () => {
 
     expect(onChange).toHaveBeenCalledTimes(1);
   });
+
+  it("should call the onChange function with the correct value when the user selects an option", () => {
+    const options = [
+      { value: "1", title: "Bitcoin-BTC" },
+      { value: "2", title: "Ethereum-ETH" },
+      { value: "3", title: "Litecoin-LTC" },
+    ];
+
+    const onChange = jest.fn();
+
+    render(
+      <SelectField
+        label="Select Field"
+        options={options}
+        value=""
+        onChange={onChange}
+      />,
+    );
+    const button = screen.getByRole("button");
+    fireEvent.press(button);
+
+    const selectedOption = screen.getByText(/bitcoin/i);
+    fireEvent.press(selectedOption);
+
+    expect(onChange).toHaveBeenCalledWith("1");
+  });
 });
