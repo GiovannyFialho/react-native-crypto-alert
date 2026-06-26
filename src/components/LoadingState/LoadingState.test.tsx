@@ -9,8 +9,6 @@ describe("Component: LoadingState", () => {
       <LoadingState message={message} />,
     );
 
-    debug();
-
     expect(getByText(message)).toBeTruthy();
   });
 });

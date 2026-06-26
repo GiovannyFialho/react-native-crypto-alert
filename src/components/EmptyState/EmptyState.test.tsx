@@ -58,8 +58,6 @@ describe("EmptyState", () => {
 
     const actionElement = queryByTestId("EmptyStateAction");
 
-    console.log(actionElement);
-
     expect(actionElement).toBeNull();
   });
 });
