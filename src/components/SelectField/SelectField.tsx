@@ -1,9 +1,14 @@
 import { Ionicons } from "@expo/vector-icons";
-import { colors } from "@theme/colors";
 import { FlatList, Modal, Pressable, Text, View } from "react-native";
-import { selectFieldStyles } from "./SelectField.styles";
-import type { SelectOption } from "./useSelectField";
-import { useSelectField } from "./useSelectField";
+
+import { EmptyState } from "@/components/EmptyState/EmptyState";
+import { selectFieldStyles } from "@/components/SelectField/SelectField.styles";
+import {
+  useSelectField,
+  type SelectOption,
+} from "@/components/SelectField/useSelectField";
+
+import { colors } from "@theme/colors";
 
 interface SelectFieldProps {
   label: string;
@@ -41,6 +46,7 @@ export function SelectField({
           >
             {value ? displayLabel : placeholder}
           </Text>
+
           <Ionicons
             name="chevron-down"
             size={22}
@@ -65,9 +71,23 @@ export function SelectField({
           <View style={selectFieldStyles.modalSheet}>
             <Text style={selectFieldStyles.modalTitle}>{label}</Text>
             <FlatList
-              style={selectFieldStyles.optionList}
-              data={options}
               keyExtractor={(item) => item.value}
+              data={options}
+              ListEmptyComponent={
+                <EmptyState
+                  icon={
+                    <Ionicons
+                      name="search"
+                      size={32}
+                      color={colors.iconMuted}
+                    />
+                  }
+                  title="No options found"
+                  description="There are no options to display at the moment."
+                />
+              }
+              testID="select-field-list"
+              style={selectFieldStyles.optionList}
               renderItem={({ item }) => (
                 <Pressable
                   onPress={() => selectItem(item.value)}
