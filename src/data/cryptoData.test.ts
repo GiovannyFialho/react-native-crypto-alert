@@ -1,7 +1,5 @@
-import {
-  cryptocurrenciesMockResponse,
-  fetchCryptocurrenciesFromApi,
-} from "@/data/cryptoData";
+import { fetchCryptocurrenciesFromApi } from "@/data/cryptoData";
+import { cryptocurrenciesMockResponse } from "@mocks/api/apiResponse";
 
 describe("API: CryptoData", () => {
   it("should fetch cryptocurrencies from the API", async () => {
