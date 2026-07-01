@@ -1,6 +1,7 @@
-import { render } from "@testing-library/react-native";
+import { fireEvent, render } from "@testing-library/react-native";
 
 import { CryptoCard } from "@/components/CryptoCard/CryptoCard";
+import { useCryptoCard } from "@/components/CryptoCard/useCryptoCard";
 import { AlertProvider } from "@/context/AlertProvider/AlertProvider";
 import { cryptoCurrenciesMock } from "@mocks/data/cryptoCurrencies";
 
@@ -79,5 +80,66 @@ describe("Component: CryptoCard", () => {
     const alertBadge = getByLabelText("Toggle alerts for this cryptocurrency");
 
     expect(alertBadge).toBeTruthy();
+  });
+
+  it("should call toggleExpanded when alert badge is pressed", async () => {
+    const toggleExpanded: jest.Mock = jest.fn();
+
+    (useCryptoCard as jest.Mock).mockReturnValue({
+      isPositive: true,
+      hasAlert: true,
+      alertsForCrypto: [
+        {
+          id: "1",
+          cryptocurrency: "Bitcoin",
+          symbol: "BTC",
+          targetPrice: 100000,
+          condition: "above",
+          createdAt: new Date().toISOString(),
+        },
+      ],
+      expanded: true,
+      toggleExpanded,
+    });
+
+    const { getByLabelText } = await render(
+      <AlertProvider>
+        <CryptoCard crypto={cryptoCurrenciesMock[0]} />
+      </AlertProvider>,
+    );
+
+    const alertBadge = getByLabelText("Toggle alerts for this cryptocurrency");
+    fireEvent.press(alertBadge);
+
+    expect(toggleExpanded).toHaveBeenCalledTimes(1);
+  });
+
+  it("should render alert list when expanded", async () => {
+    (useCryptoCard as jest.Mock).mockReturnValue({
+      isPositive: true,
+      hasAlert: true,
+      alertsForCrypto: [
+        {
+          id: "1",
+          cryptocurrency: "Bitcoin",
+          symbol: "BTC",
+          targetPrice: 100000,
+          condition: "above",
+          createdAt: new Date().toISOString(),
+        },
+      ],
+      expanded: true,
+      toggleExpanded: jest.fn(),
+    });
+
+    const { getByLabelText } = await render(
+      <AlertProvider>
+        <CryptoCard crypto={cryptoCurrenciesMock[0]} />
+      </AlertProvider>,
+    );
+
+    const alertList = getByLabelText("Alert list");
+
+    expect(alertList).toBeTruthy();
   });
 });

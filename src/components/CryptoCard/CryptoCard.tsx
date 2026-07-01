@@ -76,7 +76,10 @@ export function CryptoCard({ crypto }: CryptoCardProps) {
         </View>
       </View>
       {hasAlert && expanded && (
-        <View style={cryptoCardStyles.alertList}>
+        <View
+          style={cryptoCardStyles.alertList}
+          accessibilityLabel="Alert list"
+        >
           {alertsForCrypto.map((alert) => (
             <View key={alert.id} style={cryptoCardStyles.alertItemRow}>
               <Text style={cryptoCardStyles.alertItemTitle}>
