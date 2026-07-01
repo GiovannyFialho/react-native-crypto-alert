@@ -33,4 +33,28 @@ describe("Component: CryptoCard", () => {
 
     expect(avatar).toBeTruthy();
   });
+
+  it("should render negative change correctly", async () => {
+    const { getByText } = await render(
+      <AlertProvider>
+        <CryptoCard crypto={{ ...cryptoCurrenciesMock[0], change24h: -10 }} />
+      </AlertProvider>,
+    );
+
+    const change = getByText("-10.00%");
+
+    expect(change).toBeTruthy();
+  });
+
+  it("should render positive change correctly", async () => {
+    const { getByText } = await render(
+      <AlertProvider>
+        <CryptoCard crypto={{ ...cryptoCurrenciesMock[0], change24h: 10 }} />
+      </AlertProvider>,
+    );
+
+    const change = getByText("+10.00%");
+
+    expect(change).toBeTruthy();
+  });
 });
