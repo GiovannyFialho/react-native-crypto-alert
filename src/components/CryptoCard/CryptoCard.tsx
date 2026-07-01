@@ -1,9 +1,9 @@
-import { Text, View, Pressable } from "react-native";
 import type { Cryptocurrency } from "@data/cryptoData";
 import { formatChange, formatPrice } from "@utils/index";
+import { Image } from "expo-image";
+import { Pressable, Text, View } from "react-native";
 import { cryptoCardStyles } from "./CryptoCard.styles";
 import { useCryptoCard } from "./useCryptoCard";
-import { Image } from "expo-image";
 interface CryptoCardProps {
   crypto: Cryptocurrency;
 }
@@ -17,10 +17,17 @@ export function CryptoCard({ crypto }: CryptoCardProps) {
       <View style={cryptoCardStyles.row}>
         <View style={cryptoCardStyles.left}>
           <View style={cryptoCardStyles.avatar}>
-            {crypto.image && <Image source={{ uri: crypto.image }} style={cryptoCardStyles.avatarImage} />}
-            {!crypto.image && <Text style={cryptoCardStyles.avatarLetter}>
-              {crypto.symbol.charAt(0)}
-            </Text>}
+            {crypto.image && (
+              <Image
+                source={{ uri: crypto.image }}
+                style={cryptoCardStyles.avatarImage}
+              />
+            )}
+            {!crypto.image && (
+              <Text style={cryptoCardStyles.avatarLetter}>
+                {crypto.symbol.charAt(0)}
+              </Text>
+            )}
           </View>
           <View>
             <Text style={cryptoCardStyles.name}>{crypto.name}</Text>
@@ -54,7 +61,7 @@ export function CryptoCard({ crypto }: CryptoCardProps) {
           </View>
         </View>
         <View style={cryptoCardStyles.right}>
-          <Text style={cryptoCardStyles.price}>
+          <Text style={cryptoCardStyles.price} accessibilityLabel="Price">
             ${formatPrice(crypto.price)}
           </Text>
           <Text
