@@ -1,4 +1,4 @@
-import { renderHook } from "@testing-library/react-native";
+import { act, renderHook } from "@testing-library/react-native";
 
 import { useAlertProviderState } from "@/context/AlertProvider/useAlertProvider";
 
@@ -6,6 +6,17 @@ describe("Context: AlertProvider", () => {
   it("should add an alert", async () => {
     const { result } = await renderHook(() => useAlertProviderState());
 
-    console.log(result);
+    expect(result.current.alerts).toHaveLength(0);
+
+    await act(async () => {
+      result.current.addAlert({
+        cryptocurrency: "Bitcoin",
+        symbol: "BTC",
+        targetPrice: 100000,
+        condition: "above",
+      });
+    });
+
+    expect(result.current.alerts).toHaveLength(1);
   });
 });
