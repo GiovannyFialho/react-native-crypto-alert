@@ -1,14 +1,11 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { act, renderHook } from "@testing-library/react-native";
 
-import { AlertProvider } from "@/context/AlertProvider/AlertProvider";
 import { useAlerts } from "@/context/AlertProvider/useAlertProvider";
+import { act, renderHook } from "@tests/utils/test-utils";
 
 describe("Context: useAlerts", () => {
   it("should add an alert", async () => {
-    const { result } = await renderHook(() => useAlerts(), {
-      wrapper: AlertProvider,
-    });
+    const { result } = await renderHook(() => useAlerts());
 
     expect(result.current.alerts).toHaveLength(0);
 
