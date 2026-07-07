@@ -80,6 +80,6 @@ describe("Context: AlertProvider", () => {
       JSON.stringify(result.current.alerts),
     );
 
-    AsyncStorage.clear();
+    await AsyncStorage.clear();
   });
 });
