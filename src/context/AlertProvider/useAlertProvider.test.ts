@@ -66,7 +66,7 @@ describe("Context: AlertProvider", () => {
 
     expect(result.current.alerts).toHaveLength(0);
 
-    act(() => {
+    await act(async () => {
       result.current.addAlert({
         cryptocurrency: "Bitcoin",
         symbol: "BTC",
