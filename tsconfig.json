@@ -23,6 +23,6 @@
     "**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
-    "jest.setup.ts"
+    "jest.config.ts"
   ]
 }
