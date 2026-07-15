@@ -45,4 +45,17 @@ describe("Screen: ConversionScreen", () => {
       expect(getByText("Invalid amount")).toBeTruthy();
     });
   });
+
+  it("should show the converted amount when the amount is valid", async () => {
+    const { getByPlaceholderText, getByText } = await render(
+      <ConversionScreen />,
+    );
+    const amountInput = getByPlaceholderText("0.00");
+
+    fireEvent.changeText(amountInput, "1");
+
+    await waitFor(() => {
+      expect(getByText("$67999.50")).toBeTruthy();
+    });
+  });
 });
