@@ -12,7 +12,7 @@ const config: Config = {
     "/__tests__/utils/",
     "/__tests__/coverage/",
   ],
-  collectCoverage: true,
+  collectCoverage: false,
   collectCoverageFrom: [
     "src/**/*.ts",
     "src/**/*.tsx",

@@ -27,3 +27,11 @@ export const cryptoCurrenciesMock = [
       "https://assets.coingecko.com/coins/images/975/large/cardano.png?1747033579",
   },
 ];
+
+export const fiatCurrenciesMock = [
+  { code: "USD", symbol: "$", rate: 1 },
+  { code: "BRL", symbol: "R$", rate: 5.12 },
+  { code: "EUR", symbol: "€", rate: 0.92 },
+  { code: "GBP", symbol: "£", rate: 0.79 },
+  { code: "JPY", symbol: "¥", rate: 149.5 },
+];
