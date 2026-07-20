@@ -1,6 +1,15 @@
-import { fireEvent, render, waitFor } from "@testing-library/react-native";
-
-import { ConversionScreen } from "@/screens/ConversionScreen/ConversionScreen";
+import { formatPrice } from "@/utils";
+import {
+  cryptoCurrenciesMock,
+  fiatCurrenciesMock,
+} from "@mocks/data/cryptoCurrencies";
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react-native";
+import { ConversionScreen } from "./ConversionScreen";
 
 jest.mock("@data/cryptoData", () => {
   const {
@@ -34,28 +43,50 @@ describe("Screen: ConversionScreen", () => {
   });
 
   it("should render the invalid amount message when the amount is invalid", async () => {
-    const { getByPlaceholderText, getByText } = await render(
-      <ConversionScreen />,
-    );
-    const amountInput = getByPlaceholderText("0.00");
+    await render(<ConversionScreen />);
+
+    const amountInput = screen.getByPlaceholderText("0.00");
 
     fireEvent.changeText(amountInput, "1,00");
 
     await waitFor(() => {
-      expect(getByText("Invalid amount")).toBeTruthy();
+      expect(screen.getByText("Invalid amount")).toBeTruthy();
     });
   });
 
   it("should show the converted amount when the amount is valid", async () => {
-    const { getByPlaceholderText, getByText } = await render(
-      <ConversionScreen />,
-    );
-    const amountInput = getByPlaceholderText("0.00");
+    await render(<ConversionScreen />);
+
+    const amountInput = screen.getByPlaceholderText("0.00");
 
     fireEvent.changeText(amountInput, "1");
 
     await waitFor(() => {
-      expect(getByText("$67999.50")).toBeTruthy();
+      expect(
+        screen.getByText(
+          `$${formatPrice(
+            cryptoCurrenciesMock[0].price * fiatCurrenciesMock[0].rate,
+          )}`,
+        ),
+      ).toBeTruthy();
+    });
+  });
+
+  it("should show the converted amount when the amount is valid and the fiat currency is selected", async () => {
+    await render(<ConversionScreen />);
+
+    const amountInput = screen.getByPlaceholderText("0.00");
+
+    fireEvent.changeText(amountInput, "1");
+
+    await waitFor(() => {
+      expect(
+        screen.getByText(
+          `$${formatPrice(
+            cryptoCurrenciesMock[0].price * fiatCurrenciesMock[0].rate,
+          )}`,
+        ),
+      ).toBeTruthy();
     });
   });
 });
