@@ -4,37 +4,42 @@ import { Pressable, Text } from "react-native";
 
 import { AlertProvider } from "@/context/AlertProvider/AlertProvider";
 import { useAlerts } from "@/context/AlertProvider/useAlertProvider";
+import { cryptoAlertsMock } from "@mocks/storage/cryptoAlerts";
 
 describe("AlertProvider", () => {
-  it("should render the children", async () => {
-    const { getByText } = await render(
-      <AlertProvider>
-        <Text>Teste</Text>
-      </AlertProvider>,
-    );
+  const renderWithProvider = async (ui: React.ReactElement) => {
+    return render(<AlertProvider>{ui}</AlertProvider>);
+  };
 
-    getByText("Teste");
-    expect(getByText("Teste")).toBeTruthy();
+  let getItemSpy: jest.SpiedFunction<typeof AsyncStorage.getItem>;
+  let setItemSpy: jest.SpiedFunction<typeof AsyncStorage.setItem>;
 
+  beforeEach(() => {
+    getItemSpy = jest
+      .spyOn(AsyncStorage, "getItem")
+      .mockResolvedValue(JSON.stringify(cryptoAlertsMock));
+    setItemSpy = jest
+      .spyOn(AsyncStorage, "setItem")
+      .mockResolvedValue(Promise.resolve());
+  });
+
+  afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it("should call AsyncStorage.getItem when the component is mounted", async () => {
-    const asyncStorageGetItem = jest
-      .spyOn(AsyncStorage, "getItem")
-      .mockResolvedValue(null);
+  it("should render the children", async () => {
+    const { getByText } = await renderWithProvider(<Text>Teste</Text>);
 
+    getByText("Teste");
+    expect(getByText("Teste")).toBeTruthy();
+  });
+
+  it("should call AsyncStorage.getItem when the component is mounted", async () => {
     await act(async () => {
-      render(
-        <AlertProvider>
-          <Text>Teste</Text>
-        </AlertProvider>,
-      );
+      renderWithProvider(<Text>Teste</Text>);
     });
 
-    expect(asyncStorageGetItem).toHaveBeenCalledWith("cryptoAlerts");
-
-    jest.clearAllMocks();
+    expect(getItemSpy).toHaveBeenCalledWith("cryptoAlerts");
   });
 
   it("should call AsyncStorage.setItem when alerts are added", async () => {
@@ -57,23 +62,13 @@ describe("AlertProvider", () => {
       );
     }
 
-    const asyncStorageSetItem = jest
-      .spyOn(AsyncStorage, "setItem")
-      .mockResolvedValue(Promise.resolve());
-
-    const { getByText } = await render(
-      <AlertProvider>
-        <TestComponent />
-      </AlertProvider>,
-    );
+    const { getByText } = await renderWithProvider(<TestComponent />);
 
     fireEvent.press(getByText("Add Alert"));
 
     await waitFor(async () => {
-      expect(asyncStorageSetItem).toHaveBeenCalledTimes(1);
+      expect(setItemSpy).toHaveBeenCalledTimes(1);
     });
-
-    jest.clearAllMocks();
   });
 
   it("should call AsyncStorage.setItem when alerts are deleted", async () => {
@@ -87,22 +82,12 @@ describe("AlertProvider", () => {
       );
     }
 
-    const asyncStorageSetItem = jest
-      .spyOn(AsyncStorage, "setItem")
-      .mockResolvedValue(Promise.resolve());
-
-    const { getByText } = await render(
-      <AlertProvider>
-        <TestComponent />
-      </AlertProvider>,
-    );
+    const { getByText } = await renderWithProvider(<TestComponent />);
 
     fireEvent.press(getByText("Delete Alert"));
 
     await waitFor(async () => {
-      expect(asyncStorageSetItem).toHaveBeenCalledTimes(1);
+      expect(setItemSpy).toHaveBeenCalledTimes(1);
     });
-
-    jest.clearAllMocks();
   });
 });
