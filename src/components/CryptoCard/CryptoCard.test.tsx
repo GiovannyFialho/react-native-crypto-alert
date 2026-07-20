@@ -11,7 +11,11 @@ jest.mock("@utils/index", () => ({
 }));
 
 jest.mock("@/components/CryptoCard/useCryptoCard", () => ({
-  useCryptoCard: jest.fn().mockReturnValue({
+  useCryptoCard: jest.fn(),
+}));
+
+describe("Component: CryptoCard", () => {
+  const defaultMock = {
     isPositive: true,
     hasAlert: true,
     alertsForCrypto: [
@@ -19,17 +23,18 @@ jest.mock("@/components/CryptoCard/useCryptoCard", () => ({
         id: "1",
         cryptocurrency: "Bitcoin",
         symbol: "BTC",
-        targetPrice: 10000,
+        targetPrice: 100000,
         condition: "above",
         createdAt: new Date().toISOString(),
       },
     ],
     expanded: false,
     toggleExpanded: jest.fn(),
-  }),
-}));
+  };
 
-describe("Component: CryptoCard", () => {
+  beforeEach(() => {
+    (useCryptoCard as jest.Mock).mockReturnValue(defaultMock);
+  });
   it("should render the crypto name, symbol and price", async () => {
     const { getByText, getByLabelText } = await render(
       <CryptoCard crypto={cryptoCurrenciesMock[0]} />,
@@ -64,25 +69,16 @@ describe("Component: CryptoCard", () => {
 
   it("should render negative change correctly", async () => {
     (useCryptoCard as jest.Mock).mockReturnValue({
+      ...defaultMock,
       isPositive: false,
-      hasAlert: true,
-      alertsForCrypto: [
-        {
-          id: "1",
-          cryptocurrency: "Bitcoin",
-          symbol: "BTC",
-          targetPrice: 10000,
-          condition: "above",
-          createdAt: new Date().toISOString(),
-        },
-      ],
-      expanded: false,
-      toggleExpanded: jest.fn(),
     });
+
     (formatChange as jest.Mock).mockReturnValue("-10.00%");
+
     const { getByText } = await render(
       <CryptoCard crypto={cryptoCurrenciesMock[0]} />,
     );
+
     const change = getByText("-10.00%");
 
     expect(change).toBeTruthy();
@@ -100,19 +96,7 @@ describe("Component: CryptoCard", () => {
   it("should call toggleExpanded when alert badge is pressed", async () => {
     const toggleExpanded: jest.Mock = jest.fn();
     (useCryptoCard as jest.Mock).mockReturnValue({
-      isPositive: true,
-      hasAlert: true,
-      alertsForCrypto: [
-        {
-          id: "1",
-          cryptocurrency: "Bitcoin",
-          symbol: "BTC",
-          targetPrice: 100000,
-          condition: "above",
-          createdAt: new Date().toISOString(),
-        },
-      ],
-      expanded: true,
+      ...defaultMock,
       toggleExpanded,
     });
 
@@ -128,28 +112,19 @@ describe("Component: CryptoCard", () => {
 
   it("should render alert list when expanded", async () => {
     (useCryptoCard as jest.Mock).mockReturnValue({
-      isPositive: true,
-      hasAlert: true,
+      ...defaultMock,
       alertsForCrypto: [
-        {
-          id: "1",
-          cryptocurrency: "Bitcoin",
-          symbol: "BTC",
-          targetPrice: 100000,
-          condition: "above",
-          createdAt: new Date().toISOString(),
-        },
+        ...defaultMock.alertsForCrypto,
         {
           id: "2",
           cryptocurrency: "Ethereum",
           symbol: "ETH",
-          targetPrice: 10000,
+          targetPrice: 100000,
           condition: "below",
           createdAt: new Date().toISOString(),
         },
       ],
       expanded: true,
-      toggleExpanded: jest.fn(),
     });
 
     const { getByLabelText } = await render(
